@@ -1,0 +1,55 @@
+name: Security Toolkit CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0' # Semanal los domingos
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nmap libmagic1
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-advanced.txt
+          pip install pytest pytest-cov bandit safety
+
+      - name: Run test suite with coverage
+        run: |
+          pytest tests/ -v --cov=. --cov-report=xml
+
+      - name: Security Static Code Analysis with Bandit
+        run: |
+          bandit -r tools/ -f json -o bandit-report.json || true
+
+      - name: Upload Test Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+        if: always()
+
+      - name: Upload Security Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-reports
+          path: |
+            bandit-report.json
+            coverage.xml
+        if: always()

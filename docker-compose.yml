@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  security-toolkit:
+    build: .
+    container_name: cybersecurity-toolkit
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+    environment:
+      - VT_API_KEY=${VT_API_KEY:-}
+      - LOG_LEVEL=INFO
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+    networks:
+      - security-net
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: cyber-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    networks:
+      - security-net
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    container_name: cyber-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - security-net
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: cyber-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - security-net
+    restart: unless-stopped
+
+networks:
+  security-net:
+    driver: bridge
+
+volumes:
+  elastic-data:

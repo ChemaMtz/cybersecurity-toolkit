@@ -1,11 +1,13 @@
 """
 Módulo de Herramientas Forenses
 ===============================
-Contiene el analizador de logs (detección de intrusiones/ataques) y el monitor de integridad de archivos (FIM).
+Contiene el analizador de logs, el monitor de integridad (FIM)
+y el analizador forense integral de incidentes y artefactos.
 """
 
 from .log_analyzer import LogAnalyzer, SecurityAlert, LogAuditReport
 from .file_integrity import FileIntegrityMonitor, IntegrityReport, FileRecord
+from .forensic_analyzer import ForensicAnalyzer, ForensicArtifact
 
 __all__ = [
     "LogAnalyzer",
@@ -14,4 +16,6 @@ __all__ = [
     "FileIntegrityMonitor",
     "IntegrityReport",
     "FileRecord",
+    "ForensicAnalyzer",
+    "ForensicArtifact"
 ]

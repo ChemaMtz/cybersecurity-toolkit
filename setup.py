@@ -8,13 +8,13 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="cybersecurity-toolkit",
-    version="1.0.0",
-    author="Cybersecurity Toolkit Team",
+    version="2.0.0",
+    author="ChemaMtz & Cybersecurity Toolkit Contributors",
     author_email="security@example.com",
-    description="Suite modular de herramientas de ciberseguridad para auditoría de red, análisis de seguridad y análisis forense.",
+    description="Suite profesional de ciberseguridad: escaneo de vulnerabilidades, sandbox de malware, análisis forense y dashboard SIEM.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/example/cybersecurity-toolkit",
+    url="https://github.com/ChemaMtz/cybersecurity-toolkit",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -33,11 +33,15 @@ setup(
             "cyber-portscan=tools.network.port_scanner:main",
             "cyber-netmap=tools.network.network_mapper:main",
             "cyber-sniff=tools.network.packet_sniffer:main",
+            "cyber-vuln-scan=tools.network.vulnerability_scanner:main",
             "cyber-pwd-check=tools.security.password_analyzer:main",
             "cyber-hash-crack=tools.security.hash_cracker:main",
             "cyber-malware-scan=tools.security.malware_detector:main",
+            "cyber-sandbox=tools.security.malware_sandbox:main",
             "cyber-log-audit=tools.forensics.log_analyzer:main",
             "cyber-fim=tools.forensics.file_integrity:main",
+            "cyber-forensics=tools.forensics.forensic_analyzer:main",
+            "cyber-dashboard=dashboard.app:main",
         ],
     },
 )
